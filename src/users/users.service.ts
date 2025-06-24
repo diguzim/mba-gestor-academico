@@ -9,13 +9,14 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { User } from './user.entity';
-import * as bcrypt from 'bcrypt';
+import { HashService } from 'src/common/services/hash.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    private readonly hashService: HashService,
   ) {}
 
   async register(createUserDto: CreateUserDto) {
@@ -26,7 +27,7 @@ export class UsersService {
       throw new ConflictException('Email is already registered');
     }
 
-    const hashedPassword = await this.hashPassword(password);
+    const hashedPassword = await this.hashService.hash(password);
 
     const user = this.usersRepository.create({
       email,
@@ -54,7 +55,7 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    const passwordMatches = await this.comparePasswords(
+    const passwordMatches = await this.hashService.compare(
       password,
       user.password,
     );
@@ -70,17 +71,5 @@ export class UsersService {
         email: user.email,
       },
     };
-  }
-
-  private async hashPassword(password: string): Promise<string> {
-    const salt = await bcrypt.genSalt(10);
-    return bcrypt.hash(password, salt);
-  }
-
-  private async comparePasswords(
-    password: string,
-    hashedPassword: string,
-  ): Promise<boolean> {
-    return bcrypt.compare(password, hashedPassword);
   }
 }

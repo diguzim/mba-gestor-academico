@@ -11,9 +11,4 @@ export class UsersController {
   async register(@Body() createUserDto: CreateUserDto) {
     return this.userService.register(createUserDto);
   }
-
-  @Post('login')
-  async login(@Body() loginUserDto: LoginUserDto) {
-    return this.userService.login(loginUserDto);
-  }
 }

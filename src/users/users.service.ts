@@ -47,29 +47,7 @@ export class UsersService {
     };
   }
 
-  async login(loginUserDto: LoginUserDto) {
-    const { email, password } = loginUserDto;
-
-    const user = await this.usersRepository.findOne({ where: { email } });
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    const passwordMatches = await this.hashService.compare(
-      password,
-      user.password,
-    );
-    if (!passwordMatches) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-
-    return {
-      message: 'Login successful',
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      },
-    };
+  async findByEmail(email: string): Promise<User | null> {
+    return this.usersRepository.findOne({ where: { email } });
   }
 }

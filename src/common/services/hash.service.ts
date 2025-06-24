@@ -1,16 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import { Inject, Injectable } from '@nestjs/common';
+import { HashStrategy } from '../interfaces/hash-strategy.interface';
 
 @Injectable()
 export class HashService {
-  private readonly saltRounds = 10;
+  constructor(
+    @Inject('HASH_STRATEGY')
+    private readonly hashStrategy: HashStrategy,
+  ) {}
 
-  async hash(password: string): Promise<string> {
-    const salt = await bcrypt.genSalt(this.saltRounds);
-    return bcrypt.hash(password, salt);
+  hash(payload: string): Promise<string> {
+    return this.hashStrategy.hash(payload);
   }
 
-  async compare(raw: string, hashed: string): Promise<boolean> {
-    return bcrypt.compare(raw, hashed);
+  compare(raw: string, hashed: string): Promise<boolean> {
+    return this.hashStrategy.compare(raw, hashed);
   }
 }

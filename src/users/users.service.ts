@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { User } from './user.entity';
-import { HashService } from 'src/common/services/hash.service';
+import { HashService } from 'src/crypto/hash.service';
 
 @Injectable()
 export class UsersService {

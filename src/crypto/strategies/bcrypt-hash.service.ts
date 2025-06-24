@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { HashStrategy } from '../interfaces/hash-strategy.interface';
+import { HashStrategy } from '../../crypto/interfaces/hash-strategy.interface';
 
 @Injectable()
 export class BcryptHashStrategy implements HashStrategy {

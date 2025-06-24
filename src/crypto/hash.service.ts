@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { HashStrategy } from '../interfaces/hash-strategy.interface';
+import { HashStrategy } from './interfaces/hash-strategy.interface';
 
 @Injectable()
 export class HashService {

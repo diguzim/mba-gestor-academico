@@ -1,6 +1,7 @@
 import { Course } from 'src/courses/course.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { UserRole } from './enums/role.enum';
+import { Enrollment } from 'src/enrollments/enrollment.entity';
 
 @Entity()
 export class User {
@@ -21,4 +22,7 @@ export class User {
 
   @OneToMany(() => Course, (course) => course.createdBy)
   courses: Course[];
+
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.student)
+  enrollments: Enrollment[];
 }

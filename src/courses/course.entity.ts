@@ -1,5 +1,12 @@
+import { Enrollment } from 'src/enrollments/enrollment.entity';
 import { User } from 'src/users/user.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+} from 'typeorm';
 
 @Entity()
 export class Course {
@@ -14,4 +21,7 @@ export class Course {
 
   @ManyToOne(() => User, (user) => user.courses)
   createdBy: User;
+
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.course)
+  enrollments: Enrollment[];
 }

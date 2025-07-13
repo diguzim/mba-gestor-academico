@@ -8,6 +8,8 @@ import { Enrollment } from './enrollment.entity';
 import { Repository } from 'typeorm';
 import { Course } from 'src/courses/course.entity';
 import { User } from 'src/users/user.entity';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { EnrollmentCreatedEvent } from './events/enrollment-created.event';
 
 @Injectable()
 export class EnrollmentsService {
@@ -18,6 +20,7 @@ export class EnrollmentsService {
     private courseRepository: Repository<Course>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async enroll(courseId: string, userId: string): Promise<Enrollment> {
@@ -43,6 +46,16 @@ export class EnrollmentsService {
       student,
     });
 
-    return this.enrollmentRepository.save(enrollment);
+    const savedEnrollment = await this.enrollmentRepository.save(enrollment);
+
+    const enrollmentCreatedEvent = new EnrollmentCreatedEvent();
+    enrollmentCreatedEvent.enrollmentId = savedEnrollment.id;
+    enrollmentCreatedEvent.courseId = courseId;
+    enrollmentCreatedEvent.studentId = userId;
+    enrollmentCreatedEvent.createdAt = new Date();
+
+    this.eventEmitter.emit('enrollment.created', enrollmentCreatedEvent);
+
+    return savedEnrollment;
   }
 }

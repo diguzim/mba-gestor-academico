@@ -13,6 +13,6 @@ export class EnrollmentsController {
   @Roles(UserRole.Student)
   async enroll(@Param('courseId') courseId: string, @Req() req: any) {
     const user = req.user;
-    return this.enrollmentsService.enroll(courseId, user.userId);
+    return this.enrollmentsService.enroll(courseId, user.id);
   }
 }

@@ -8,13 +8,15 @@ import { EnrollmentsModule } from './enrollments/enrollments.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { NotificationsModule } from './notifications/notifications.module';
+import { ConfigModule } from '@nestjs/config';
+import config from './config';
 
 @Module({
   imports: [
-    AuthModule,
-    UsersModule,
-    CoursesModule,
-    EnrollmentsModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [config],
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -26,6 +28,10 @@ import { NotificationsModule } from './notifications/notifications.module';
       synchronize: true,
     }),
     EventEmitterModule.forRoot(),
+    AuthModule,
+    UsersModule,
+    CoursesModule,
+    EnrollmentsModule,
     NotificationsModule,
   ],
   controllers: [AppController],

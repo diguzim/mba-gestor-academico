@@ -38,6 +38,9 @@ class EnvironmentVariables {
 
   @IsBoolean()
   DATABASE_SYNCHRONIZE: boolean;
+
+  @IsString()
+  JWT_SECRET: string;
 }
 
 export function validate(config: Record<string, unknown>) {

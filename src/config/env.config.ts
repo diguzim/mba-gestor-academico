@@ -10,6 +10,9 @@ export const envConfigRegistration = registerAs('', () => ({
     name: process.env.DATABASE_NAME!,
     synchronize: process.env.DATABASE_SYNCHRONIZE! === 'true',
   },
+  jwt: {
+    secret: process.env.JWT_SECRET!,
+  },
 }));
 
 // Create and export this type: ConfigType<typeof envConfig>

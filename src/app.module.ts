@@ -9,13 +9,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { NotificationsModule } from './notifications/notifications.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import config from './config';
+import envConfig from './config/env.config';
+import { validate } from './config/env.validation';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [config],
+      load: [envConfig],
+      validate,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

@@ -8,29 +8,29 @@ import { EnrollmentsModule } from './enrollments/enrollments.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { NotificationsModule } from './notifications/notifications.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import envConfig from './config/env.config';
+import { ConfigModule } from '@nestjs/config';
+import { envConfigRegistration, EnvConfig } from './config/env.config';
 import { validate } from './config/env.validation';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [envConfig],
+      load: [envConfigRegistration],
       validate,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
+      inject: [envConfigRegistration.KEY],
+      useFactory: (config: EnvConfig) => ({
         type: 'postgres',
-        host: configService.get<string>('database.host'),
-        port: configService.get<number>('database.port'),
-        username: configService.get<string>('database.username'),
-        password: configService.get<string>('database.password'),
-        database: configService.get<string>('database.name'),
+        host: config.database.host,
+        port: config.database.port,
+        username: config.database.username,
+        password: config.database.password,
+        database: config.database.name,
         autoLoadEntities: true,
-        synchronize: configService.get<boolean>('database.synchronize'),
+        synchronize: config.database.synchronize,
       }),
     }),
     EventEmitterModule.forRoot(),
